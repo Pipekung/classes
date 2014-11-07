@@ -1,0 +1,12 @@
+{
+    "name": "pipekung/classes",
+    "description": "Utility Class",
+    "authors": [
+        {
+            "name": "Pipekung",
+            "email": "genius.society@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}
