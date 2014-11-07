@@ -1,6 +1,7 @@
 {
     "name": "pipekung/classes",
     "description": "Utility Class",
+    "license": "MIT",
     "authors": [
         {
             "name": "Pipekung",
