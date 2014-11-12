@@ -35,9 +35,9 @@ class Date {
     );
         str_replace('/', '-', $date);
         if ($date == '0000-00-00') return $date;
-        list($year, $month, $day) = explode('-', $date);
+        list($day, $month, $year) = explode('-', $date);
 
-        return "{$day} ".$thaiMonth[$month]." ".($year+543);
+        return ($day*1)." ".$thaiMonth[$month]." ".($year+543);
     }
     
     public static function conv2en($date) {
