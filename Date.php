@@ -35,8 +35,8 @@ class Date {
     );
         str_replace('/', '-', $date);
         if ($date == '0000-00-00') return $date;
-        list($day, $month, $year) = explode('-', $date);
-
+        //list($day, $month, $year) = explode('-', $date);
+        list($year, $month, $day) = explode('-', $date);
         return ($day*1)." ".$thaiMonth[$month]." ".($year+543);
     }
     
