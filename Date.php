@@ -12,7 +12,7 @@ class Date {
     public static function conv2th($date) {
         str_replace('/', '-', $date);
         if ($date == '0000-00-00') return $date;
-        list($year, $month, $day) = explode('-', $date);
+        list($day, $month, $year) = explode('-', $date);
         
         return "{$day}-{$month}-". ($year+543);
     }
