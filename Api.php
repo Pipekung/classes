@@ -18,4 +18,12 @@ class Api {
 	    return empty($data->citizenId) ? null : $data->citizenId;
     }
     
+    public static function GetPersonInfo($citizenId) {
+
+    	   $apiKey = Yii::$app->params['apiKey'];
+	   $url = Yii::$app->params['getPersonUrl'] . "/{$apiKey}/{$citizenId}";
+	   $data = json_decode(Curl::getData($url));
+           return empty($data[0]->id) ? null : $data[0];
+    } 
+    
 }
