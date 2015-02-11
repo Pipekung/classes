@@ -9,8 +9,10 @@ use Yii;
  */
 class Menu {
     
-    public static function Active($id) {
-        return (Yii::$app->controller->id==$id);
+    public static function Active($name, $id='*') {
+    	if (Yii::$app->controller->module->id==$name && $id=='*') return true;
+    	elseif (Yii::$app->controller->module->id==$name && Yii::$app->controller->id==$id) return true;
+        return false;
     }
     
 }
