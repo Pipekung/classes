@@ -16,4 +16,8 @@ class Common {
         return strtolower($model);
     }
     
+    public static function getFiscalYear() {
+    	return (date('m') >= 10) ? (date('Y') + 544) : (date('Y') + 543);
+    }
+
 }
