@@ -13,16 +13,25 @@ class Db {
 
 	public static function getUserInFaculty($faculty_id=null, $year=null) {
 		$query = (new Query)
-			->select('t1.id, t2.name, t4.name AS position_type, t3.name AS position_name, leave_store')
+			->select('t1.id, 
+				t2.name, 
+				t4.name AS position_type, 
+				t3.name AS position_name, 
+				leave_store, 
+				SUM(t6.count_day) AS relax_day, 
+				(leave_store - SUM(t6.count_day)) AS relax_summary
+			')
 			->from('user t1 
 				JOIN profile t2 ON (t1.id = t2.user_id) 
 				LEFT JOIN hr_position t3 ON (t3.id = t2.position_id) 
 				LEFT JOIN hr_position_type t4 ON (t4.id = t2.position_type_id)
 				LEFT JOIN hr_leave_store t5 ON (t1.id = t5.user_id AND t5.fiscal_year = :fiscal_year)
+				LEFT JOIN hr_leave t6 ON (t1.id = t6.user_id AND t6.fiscal_year = :fiscal_year AND t6.leave_type_id = 2)
 			')
 			->where([
 				't2.faculty_id' => empty($faculty_id) ? self::getFacultyByUser() : $faculty_id,
 			])
+			->groupBy('t1.id')
 			->addParams([':fiscal_year' => empty($year) ? Common::getFiscalYear() : $year])
 		;
 		$cmd = $query->createCommand();
@@ -50,7 +59,7 @@ class Db {
 		;
 		$cmd = $query->createCommand();
 		$result = $cmd->queryScalar();
-		return $result;
+		return $result ? $result : '0';
 	}
 
 	public static function getRelaxDay($user_id=null, $fiscal_year=null) {
@@ -65,6 +74,17 @@ class Db {
 		$cmd = $query->createCommand();
 		$result = $cmd->queryScalar();
 		return $result ? $result : '0';
+	}
+
+	public static function getUserProfile($user_id=null) {
+		$query = (new Query)
+			->select('*')
+			->from('profile')
+			->where(['user_id' => empty($user_id) ? Yii::$app->user->id : $user_id])
+		;
+		$cmd = $query->createCommand();
+		$result = $cmd->queryOne();
+		return $result;
 	}
 
 }
