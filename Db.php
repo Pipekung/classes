@@ -53,4 +53,18 @@ class Db {
 		return $result;
 	}
 
+	public static function getRelaxDay($user_id=null, $fiscal_year=null) {
+		$query = (new Query)
+			->select('leave_store')
+			->from('hr_leave_store')
+			->where([
+				'user_id' => empty($user_id) ? Yii::$app->user->id : $user_id,
+				'fiscal_year' => empty($fiscal_year) ? Common::getFiscalYear() : $fiscal_year,
+			])
+		;
+		$cmd = $query->createCommand();
+		$result = $cmd->queryScalar();
+		return $result ? $result : '0';
+	}
+
 }
