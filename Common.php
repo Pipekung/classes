@@ -2,6 +2,7 @@
 namespace pipekung\classes;
 
 use Yii;
+use yii\web\View;
 
 /**
  * @author Pipekung Specialz <chanja@kku.ac.th>
@@ -17,13 +18,17 @@ class Common {
     }
 
     public static function getFiscalYear() {
-    	return (date('m') >= 10) ? (date('Y') + 544) : (date('Y') + 543);
+        return (date('m') >= 10) ? (date('Y') + 544) : (date('Y') + 543);
     }
 
     public static function calFiscalYear($date) {
         str_replace('/', '-', $date);
         list($y, $m, $d) = explode('-', $date);
         return ($m >= 10) ? ($y + 544) : ($y + 543);
+    }
+
+    public static function debug($data) {
+        return Yii::$app->view->registerJs("console.log('{$data}');", View::POS_END);
     }
 
 }
