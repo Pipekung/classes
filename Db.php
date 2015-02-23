@@ -51,6 +51,20 @@ class Db {
 		return $rows;
 	}
 
+	public static function getUserInHr($id) {
+		$rows = (new Query)
+			->select(['*',
+				'name' => 'CONCAT(title, firstname, \' \', lastname)',
+			])
+			->from('hr_person')
+			->where([
+				'id' => $id,
+			])
+			->one(Yii::$app->db_kku)
+		;
+		return $rows;
+	}
+
 	public static function getFacultyByUser($user_id=null) {
 		$result = (new Query)
 			->select('t2.id, t2.code, t2.name')
@@ -64,8 +78,8 @@ class Db {
 	public static function countLeaveDay($id, $user_id=null) {
 		$result = (new Query)
 			->select('SUM(t1.count_day)')
-			->from('hr_leave t1, (SELECT `id`, `leave_type_id`, `end_date` FROM `hr_leave` WHERE `id` = :id) t2')
-			->where('t1.leave_type_id = t2.leave_type_id AND t1.end_date < t2.end_date')
+			->from('hr_leave t1, (SELECT `id`, `leave_type_id`, `end_date`, `user_id` FROM `hr_leave` WHERE `id` = :id) t2')
+			->where('t1.leave_type_id = t2.leave_type_id AND t1.end_date < t2.end_date AND t1.user_id = t2.user_id')
 			->addParams([':id' => $id])
 			->scalar()
 		;
@@ -159,5 +173,15 @@ class Db {
 		;
 		return $result;
 	}
+
+
+    public static function getUsersSelectOption() {
+        $model = self::getUserInFaculty();
+        $data = [];
+        foreach ($model as $val) {
+            $data[$val['id']] = $val['name'];
+        }
+        return $data;
+    }
 
 }
