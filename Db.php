@@ -184,4 +184,27 @@ class Db {
         return $data;
     }
 
+    public static function isAdmin($role=null) {
+		$role = isset($role) ? $role : self::getUserRole();
+		return in_array('Administrator', $role);
+    }
+
+    public static function isStaff($role_name, $role=null) {
+		$role = isset($role) ? $role : self::getUserRole();
+		return self::isAdmin($role) ? true : in_array($role_name, $role);
+    }
+
+    public static function getUserRole($user_id=null) {
+    	$user_id = isset($user_id) ? $user_id : Yii::$app->user->id;
+    	$result = (new Query)
+			->select('item_name')
+			->from('auth_assignment t1 JOIN user t2 ON (t1.user_id = t2.id)')
+			->where([
+				't1.user_id' => Yii::$app->user->id,
+			])
+			->column()
+		;
+		return $result;
+    }
+
 }
