@@ -1,10 +1,9 @@
 <?php
 
-namespace pipekung\classes;
+namespace app\controls;
 
 use Yii;
-use pipekung\classes\Curl;
-use pipekung\classes\Db;
+use app\controls\Curl;
 use dektrium\user\models\User;
 use dektrium\user\helpers\Password;
 use mdm\admin\models\AuthItem;
@@ -39,7 +38,7 @@ class Auth {
 	}
 
 	public function addUser($ldap) {
-		$profile = Db::getUserProfileFromHr($ldap->citizen);
+		$profile = Yii::$app->userHelpers->getUserProfileFromHr($ldap->citizen);
 		$user = new User;
 		$user->id = $profile['id'];
 		$user->username = $this->username;
@@ -68,11 +67,11 @@ class Auth {
 			':name' => "{$profile['title']}{$profile['firstname']} {$profile['lastname']}",
 		    ':address' => "{$profile['homeadd']} {$profile['moo']} {$profile['tok']} {$profile['soi']} {$profile['street']} {$profile['district']} {$profile['amphur']} {$profile['province']} {$profile['zipcode']}",
 		    ':phone' => $profile['telephone'],
-		    ':faculty_id' => Db::mapFaculty($profile['faculty'])['id'],
-		    ':position_id' => Db::mapPosition($profile['posi'])['id'],
-		    ':position_type_id' => Db::mapPositionType($profile['positype'])['id'],
-		    ':level_id' => Db::mapLevel($profile['level'])['id'],
-		    ':division_id' => Db::mapDivision($profile['division'])['id'],
+		    ':faculty_id' => Yii::$app->mappingHelpers->mapFaculty($profile['faculty'])['id'],
+		    ':position_id' => Yii::$app->mappingHelpers->mapPosition($profile['posi'])['id'],
+		    ':position_type_id' => Yii::$app->mappingHelpers->mapPositionType($profile['positype'])['id'],
+		    ':level_id' => Yii::$app->mappingHelpers->mapLevel($profile['level'])['id'],
+		    ':division_id' => Yii::$app->mappingHelpers->mapDivision($profile['division'])['id'],
 		    ':user_id' => $profile['id'],
 		])->execute();
 	}
